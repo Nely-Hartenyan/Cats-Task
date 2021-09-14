@@ -1,5 +1,4 @@
 import React, {useEffect, useState, FC} from "react";
-
 import axios from "axios";
 import {Button, Container, Image, ImagesDiv, ImgContainer} from "./Images.style";
 import {IImage} from "../Types/Type";
@@ -22,8 +21,8 @@ const Images: FC<ImagesProps> = ({link}) => {
                     }
                 })
                 setImages(changedData)
-            } catch (e) {
-                alert(e)
+            } catch (error) {
+                alert(error)
             }
         })()
         return () => setImages([])
@@ -37,31 +36,22 @@ const Images: FC<ImagesProps> = ({link}) => {
             })
     }
 
-    const onerror = (id: string) => {
-        const index = images.findIndex(el => el.id === id)
-        setImages(images.splice(index, 1))
-
-    }
-
     if (!images) {
         return <h1> Loading... </h1>
     }
 
     return (
         <Container>
-
             <ImgContainer>
                 {images.map((item: IImage) => {
 
                         return (
-                            <ImagesDiv key={item.id + Math.random()}>
+                            <ImagesDiv key = {item.id + Math.random()}>
 
                                 <Image
-                                    onError={() => onerror(item.id)}
-                                    src={item.url}
+                                    src = {item.url}
                                     alt=''
                                 />
-
 
                             </ImagesDiv>
                         )
@@ -69,10 +59,9 @@ const Images: FC<ImagesProps> = ({link}) => {
                 )}
             </ImgContainer>
 
-            <Button onClick={add}>
+            <Button onClick = {add}>
                 More
             </Button>
-
         </Container>
     )
 }

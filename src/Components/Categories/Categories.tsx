@@ -7,15 +7,15 @@ interface CategoriesProps{
     items:ICategories[]
 }
 
-const Categories:FC<CategoriesProps>=({items})=>{
+const Categories:FC<CategoriesProps> = ({items}) => {
 
     return (
         <Styled.Container>
             <Styled.Ul >
-                {items.map(item=> {
+                {items.map(item => {
                         return (
-                            <Styled.Li key={item.id+Math.random()}>
-                                <Link to={`/${item.id}`}>
+                            <Styled.Li key = {item.id+Math.random()}>
+                                <Link to = {`/${item.id}`}>
                                     {item.name}
                                 </Link>
                             </Styled.Li>

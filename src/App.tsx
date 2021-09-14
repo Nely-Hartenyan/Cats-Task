@@ -8,33 +8,32 @@ import {Route} from "react-router-dom";
 
 const App:FC=() =>{
 
-    const [items,setItems]=useState<ICategories[]>([]);
+    const [items,setItems] = useState<ICategories[]>([]);
 
-    useEffect(()=>{
+    useEffect(() => {
         setItems([]);
         (async function (){
             try{
-                const res=await axios.get<ICategories[]>('https://api.thecatapi.com/v1/categories')
+                const res = await axios.get<ICategories[]>('https://api.thecatapi.com/v1/categories')
                 setItems(res.data)
-            } catch (e){
-                alert(e)
+            } catch (error){
+                alert(error)
             }
         })()
 
-        return ()=> setItems([])}, [])
-
+        return () => setItems([])}, [])
 
   return (
       <Styled.Container>
-
-          <Categories items={items} />
+          <Categories items = {items} />
           <Styled.ContainerDiv>
-              {items.map(item=> {
+              {items.map(item => {
                       return  (
                           <Route
-                              path={`/${item.id}`}
-                              render={()=> <Images link={item.id} /> }
-                              key={item.id+Math.random()}/>
+                              path = {`/${item.id}`}
+                              render = {() => <Images link = {item.id} /> }
+                              key = {item.id+Math.random()}
+                          />
                       )
                   }
               )}
