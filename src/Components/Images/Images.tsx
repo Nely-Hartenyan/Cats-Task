@@ -2,66 +2,59 @@ import React, {useEffect, useState, FC} from "react";
 import axios from "axios";
 import {Button, Container, Image, ImagesDiv, ImgContainer} from "./Images.style";
 import {IImage} from "../Types/Type";
+import {useHistory} from "react-router-dom";
+import {path} from "../Config";
+import useFetch from "../useFetch";
 
-interface ImagesProps {
-    link: number
-}
+const Images: FC = () => {
 
-const Images: FC<ImagesProps> = ({link}) => {
+    const history = useHistory()
+    const link = history.location.pathname.replace("/",'')
+    const url = `${path}&category_ids=${link}&limit=10`
+    console.log('url',url)
 
-    const [images, setImages] = useState<IImage[]>([]);
+    const {data, loading, error,more,fetchImages} = useFetch(url)
 
-    useEffect(() => {
-        (async function () {
-            try {
-                const {data} = await axios.get<IImage[]>(`https://api.thecatapi.com/v1/images/search?limit=10&page=1&category_ids=${link} `)
-                const changedData = data.map((item) => {
-                    return {
-                        ...item,
-                    }
-                })
-                setImages(changedData)
-            } catch (error) {
-                alert(error)
-            }
-        })()
-        return () => setImages([])
-    }, [])
+    let images = data
 
 
-    const add = () => {
-        axios.get<IImage[]>(`https://api.thecatapi.com/v1/images/search?limit=10&page=1&category_ids=${link} `)
-            .then(res => {
-                setImages(state => [...state, ...res.data])
-            })
+    useEffect( () => {
+        if (url){
+            fetchImages(url);
+        }
+
+    }, [url] )
+
+
+    if(error) {
+        console.log('error', error);
+        return null;
     }
 
-    if (!images) {
-        return <h1> Loading... </h1>
-    }
 
     return (
         <Container>
-            <ImgContainer>
-                {images.map((item: IImage) => {
+            { loading ? <h1> Loading ... </h1> :
+                <ImgContainer>
+                    {images && images.map(item => {
+                            return (
+                                <ImagesDiv key={item.id + Math.random()}>
 
-                        return (
-                            <ImagesDiv key = {item.id + Math.random()}>
+                                    <Image
+                                        src={item.url}
+                                        alt=''
+                                    />
+                                </ImagesDiv>
+                            )
+                        }
+                    )}
+                </ImgContainer>
+            }
 
-                                <Image
-                                    src = {item.url}
-                                    alt=''
-                                />
-
-                            </ImagesDiv>
-                        )
-                    }
-                )}
-            </ImgContainer>
-
-            <Button onClick = {add}>
+            <Button onClick = {more} >
                 More
-            </Button>
+            </Button >
+
         </Container>
     )
 }
